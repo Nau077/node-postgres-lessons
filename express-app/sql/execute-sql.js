@@ -21,7 +21,7 @@ pool.connect(function(err, client, done) {
     }
   
 
-  client.query(sql, function(err, result){
+  client.query(sql, function(err, _){
     done();
     if(err){
         console.log('error: ', err);

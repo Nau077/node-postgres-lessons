@@ -124,7 +124,8 @@ $$
             (
                 id         SERIAL PRIMARY KEY,
                 lessons_id INTEGER NOT NULL,
-                payment_time  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                payment_start_time  TIMESTAMP,
+				payment_end_time  TIMESTAMP,
                 payment_amount        DECIMAL,
                 FOREIGN KEY (lessons_id) REFERENCES lessons (id)
             );
