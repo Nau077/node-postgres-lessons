@@ -1,9 +1,11 @@
+const http = require("http");
 const express = require("express");
 const app = express();
 const config = require("../config/express.config");
+const server = http.createServer(app);
 
-app.listen(constants.PORT, constants.HOST, () => {
-  console.log(
-    `Node.js express server running on port: ${config.PORT}, host ${config.HOST}`
-  );
+require("./presentation-layer/routes/students.routes")(app);
+
+server.listen(config.PORT, () => {
+  console.log(`Server is running on port ${config.PORT}.`);
 });
