@@ -1,18 +1,16 @@
-var pg = require('pg');
-var fs = require('fs');
-
-var sql = fs.readFileSync('pg_school_demo.sql').toString();
+require("dotenv").config();
+const pg = require('pg');
+const fs = require('fs');
+const sql = fs.readFileSync('pg_school_demo.sql').toString();
 
 const config = {
     user: 'schooluser',
     database: 'schooltestdb',
     password: 'admin',
-    port: 5432                  //Default port, change it if needed
+    port: process.env.DB_PORT                
 };
 
-// pool takes the object above -config- as parameter
 const pool = new pg.Pool(config);
-
 
 pool.connect(function(err, client, done) {
     if(err){

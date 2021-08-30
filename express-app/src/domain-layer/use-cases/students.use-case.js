@@ -10,4 +10,9 @@ module.exports = class Student {
     const userRepository = new UserRepository();
     return userRepository.getOneStudent(id);
   }
+
+  updateStudent(phone_number, id) {
+    const userRepository = new UserRepository();
+    return userRepository.updateOneStudent(phone_number, id);
+  }
 };

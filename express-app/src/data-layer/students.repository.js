@@ -23,12 +23,11 @@ module.exports = class StudentRepository {
     }
   }
 
-  async updateOneStudent(id) {
+  async updateOneStudent(phone_number, id) {
     try {
-      const student = await knex
-        .select("id", "name", "phone_number")
-        .from("students")
-        .where({ id: id });
+      const student = await knex("students")
+        .where({ id: id })
+        .update({"phone_number":  phone_number}, ["id", "name", "phone_number"])
 
       return student;
     } catch (e) {

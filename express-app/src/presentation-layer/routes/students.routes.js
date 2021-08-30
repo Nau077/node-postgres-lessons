@@ -12,4 +12,5 @@ module.exports = function(app) {
   });
 
   app.get("/api/students/", jsonParser, studentsController.getStudents);
+  app.patch("/api/students/update-phone", jsonParser, studentsController.updateStudent);
 };

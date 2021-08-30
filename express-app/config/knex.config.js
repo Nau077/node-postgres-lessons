@@ -2,9 +2,9 @@ module.exports = require('knex')({
     client: 'pg',
     connection: {
         host: '127.0.0.1',
-        port: '5432',
-        user: 'admin',
+        port: process.env.DB_PORT,
+        user: 'schooluser',
         password: 'admin',
-        database: 'demo'
+        database: 'schooltestdb'
     }
 });

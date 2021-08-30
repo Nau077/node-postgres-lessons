@@ -20,3 +20,20 @@ exports.getStudents = async (req, res) => {
     return res.status(500).send({ message: err.message });
   }
 };
+
+exports.updateStudent = async (req, res) => {
+  try {
+    const studentsUseCase = new StudentsUseCase();
+    const data = req.body
+
+    if (data?.phone_number) {
+
+      const student = await studentsUseCase.updateStudent(data.phone_number, data.id);
+      return res.status(200).send(student);
+    }
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: err.message });
+  }
+}
