@@ -38,11 +38,7 @@ $$
                 name       VARCHAR(50) NOT NULL,
                 phone_number TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
-            );
-        THEN
-            ALTER TABLE students FOREIGN KEY(id)
-            REFERENCES subjectsstudents(students_id)
-            ON DELETE CASCADE;   
+            ); 
         END IF;
     END
 $$;
@@ -84,8 +80,8 @@ $$
                 id       SERIAL PRIMARY KEY,
                 students_id  INTEGER NOT NULL,
                 subjects_id INTEGER NOT NULL,
-                FOREIGN KEY (students_id) REFERENCES students (id),
-                FOREIGN KEY (subjects_id) REFERENCES subjects (id)
+                FOREIGN KEY (students_id) REFERENCES students (id) ON DELETE CASCADE,
+                FOREIGN KEY (subjects_id) REFERENCES subjects (id) ON DELETE CASCADE
             );
         END IF;
     END
