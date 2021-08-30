@@ -39,9 +39,14 @@ $$
                 phone_number TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
             );
+        THEN
+            ALTER TABLE students FOREIGN KEY(id)
+            REFERENCES subjectsstudents(students_id)
+            ON DELETE CASCADE;   
         END IF;
     END
 $$;
+
 
 -- CREATE "subjects"
 DO
