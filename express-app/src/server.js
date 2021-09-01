@@ -10,3 +10,6 @@ require("./presentation-layer/routes/students.routes")(app);
 server.listen(config.PORT, () => {
   console.log(`Server is running on port ${config.PORT}.`);
 });
+
+// DB_PORT=5433
+// DATABASE_URL=schooluser://schooluser:admin@localhost:5433/schooltestdb
