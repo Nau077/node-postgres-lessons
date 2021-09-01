@@ -1,3 +1,33 @@
+    CREATE OR REPLACE FUNCTION aftertecheardel()
+        RETURNS trigger AS
+        $$
+        BEGIN
+            INSERT INTO fired_workers_log(name, id) VALUES
+            (NEW.id, NEW.name);
+        RETURN NEW;
+        END
+    $$
+    LANGUAGE plpgsql; 
+ 
+    END;
+ 
+DO
+$$
+    BEGIN
+    IF NOT EXISTS (
+        SELECT *
+        FROM information_schema.triggers
+        WHERE trigger_name= 'after_teacher_del'
+     )
+    THEN
+        CREATE TRIGGER after_teacher_del
+            AFTER DELETE
+            ON teachers
+            FOR EACH ROW
+            EXECUTE PROCEDURE aftertecheardel();
+        END IF;
+    END
+$$;
 -- CREATE "teachers" table if it is not exist
 DO
 $$
@@ -20,6 +50,29 @@ $$
         END IF;
     END
 $$;
+
+-- CREATE "fired_teacher_log" table if it is not exist
+DO
+$$
+    BEGIN
+        IF NOT EXISTS
+            (SELECT 1
+             FROM information_schema.tables
+             WHERE table_schema = 'public'
+               AND table_name = 'fired_workers_log'
+            )
+        THEN
+            CREATE TABLE fired_workers_log
+            (
+                id           SERIAL PRIMARY KEY,
+                teacher_id  SERIAL,
+                 name       VARCHAR(50) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        END IF;
+    END
+$$;
+
 
 -- CREATE "students"
 DO
