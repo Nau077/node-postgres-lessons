@@ -8,8 +8,8 @@ build/express:
 	exec npm install
 
 .PHONY: run/express
-run/server: SHELL=bash
-run/server:
+run/express: SHELL=bash
+run/express:
 	@cd express-app; \
 	exec npm run dev
 

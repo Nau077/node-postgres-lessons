@@ -1,4 +1,4 @@
-const studentsController = require("../controllers/students.controllers");
+const studentsController = require("../controllers/students.controller");
 const bodyParser = require("body-parser");
 const jsonParser = bodyParser.json();
 
@@ -12,5 +12,5 @@ module.exports = function(app) {
   });
 
   app.get("/api/students/", jsonParser, studentsController.getStudents);
-  app.patch("/api/students/update-phone", jsonParser, studentsController.updateStudent);
+  app.patch("/api/student/", jsonParser, studentsController.updateStudent);
 };

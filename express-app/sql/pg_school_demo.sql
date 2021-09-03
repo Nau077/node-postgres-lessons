@@ -1,9 +1,79 @@
+-- CREATE "subjects"
+DO
+$$
+    BEGIN
+        IF NOT EXISTS
+            (SELECT 1
+             FROM information_schema.tables
+             WHERE table_schema = 'public'
+               AND table_name = 'subjects'
+            )
+        THEN
+            CREATE TABLE subjects
+            (
+                id   SERIAL PRIMARY KEY,
+                name VARCHAR(100) NOT NULL
+            );
+        END IF;
+    END
+$$;
+
+
+-- CREATE "teachers" table if it is not exist
+DO
+$$
+    BEGIN
+        IF NOT EXISTS
+            (SELECT 1
+             FROM information_schema.tables
+             WHERE table_schema = 'public'
+               AND table_name = 'teachers'
+            )
+        THEN
+            CREATE TABLE teachers
+            (
+                id                  INTEGER PRIMARY KEY,
+                subject_id          INTEGER NOT NULL,
+                name                VARCHAR(50) NOT NULL,
+                is_union_member     BOOLEAN NOT NULL,
+                work_experience     NUMERIC CHECK(work_experience > 1),
+                phone_number        TEXT,
+                created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (subject_id) REFERENCES subjects (id)
+            );
+        END IF;
+    END
+$$;
+
+-- CREATE "fired_workers_log" table if it is not exist
+DO
+$$
+    BEGIN
+        IF NOT EXISTS
+            (SELECT 1
+             FROM information_schema.tables
+             WHERE table_schema = 'public'
+               AND table_name = 'fired_workers_log'
+            )
+        THEN
+            CREATE TABLE fired_workers_log
+            (
+                id          SERIAL PRIMARY KEY,
+                teacher_id  INTEGER,
+                name       VARCHAR(50) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        END IF;
+    END
+$$;    
+    
     CREATE OR REPLACE FUNCTION aftertecheardel()
         RETURNS trigger AS
         $$
         BEGIN
-            INSERT INTO fired_workers_log(name, id) VALUES
-            (NEW.id, NEW.name);
+            INSERT INTO fired_workers_log(name, teacher_id) VALUES
+            (OLD.name, OLD.id);
         RETURN NEW;
         END
     $$
@@ -28,50 +98,6 @@ $$
         END IF;
     END
 $$;
--- CREATE "teachers" table if it is not exist
-DO
-$$
-    BEGIN
-        IF NOT EXISTS
-            (SELECT 1
-             FROM information_schema.tables
-             WHERE table_schema = 'public'
-               AND table_name = 'teachers'
-            )
-        THEN
-            CREATE TABLE teachers
-            (
-                id         SERIAL PRIMARY KEY,
-                subject_id VARCHAR(50) NOT NULL,
-                name       VARCHAR(50) NOT NULL,
-                phone_number        TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        END IF;
-    END
-$$;
-
--- CREATE "fired_teacher_log" table if it is not exist
-DO
-$$
-    BEGIN
-        IF NOT EXISTS
-            (SELECT 1
-             FROM information_schema.tables
-             WHERE table_schema = 'public'
-               AND table_name = 'fired_workers_log'
-            )
-        THEN
-            CREATE TABLE fired_workers_log
-            (
-                id           SERIAL PRIMARY KEY,
-                teacher_id  SERIAL,
-                 name       VARCHAR(50) NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        END IF;
-    END
-$$;
 
 
 -- CREATE "students"
@@ -88,7 +114,7 @@ $$
             CREATE TABLE students
             (
                 id           SERIAL PRIMARY KEY,
-                name       VARCHAR(50) NOT NULL,
+                name         VARCHAR(50) NOT NULL,
                 phone_number TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
             ); 
@@ -97,25 +123,6 @@ $$
 $$;
 
 
--- CREATE "subjects"
-DO
-$$
-    BEGIN
-        IF NOT EXISTS
-            (SELECT 1
-             FROM information_schema.tables
-             WHERE table_schema = 'public'
-               AND table_name = 'subjects'
-            )
-        THEN
-            CREATE TABLE subjects
-            (
-                id   SERIAL PRIMARY KEY,
-                name VARCHAR(100) NOT NULL
-            );
-        END IF;
-    END
-$$;
 
 -- CREATE "subjectsstudents"
 DO
@@ -134,7 +141,7 @@ $$
                 students_id  INTEGER NOT NULL,
                 subjects_id INTEGER NOT NULL,
                 FOREIGN KEY (students_id) REFERENCES students (id) ON DELETE CASCADE,
-                FOREIGN KEY (subjects_id) REFERENCES subjects (id) ON DELETE CASCADE
+                FOREIGN KEY (subjects_id) REFERENCES subjects (id)
             );
         END IF;
     END
@@ -153,10 +160,10 @@ $$
         THEN
             CREATE TABLE lessons
             (
-                id         SERIAL PRIMARY KEY,
-                subjects_students_id   INTEGER NOT NULL,
-                teachers_id INTEGER NOT NULL,
-                FOREIGN KEY (teachers_id) REFERENCES teachers (id),
+                id                      SERIAL PRIMARY KEY,
+                subjects_students_id    INTEGER NOT NULL,
+                teachers_id             INTEGER NOT NULL,
+                FOREIGN KEY (teachers_id) REFERENCES teachers (id) ON DELETE CASCADE,
                 FOREIGN KEY (subjects_students_id) REFERENCES subjectsstudents (id)
             );
         END IF;
@@ -181,7 +188,7 @@ $$
                 payment_start_time  TIMESTAMP,
 				payment_end_time  TIMESTAMP,
                 payment_amount        DECIMAL,
-                FOREIGN KEY (lessons_id) REFERENCES lessons (id)
+                FOREIGN KEY (lessons_id) REFERENCES lessons (id) ON DELETE CASCADE
             );
         END IF;
     END
@@ -219,10 +226,10 @@ $$
              WHERE id = 1
             )
         THEN
-            INSERT INTO public.teachers (id, subject_id, name, phone_number)
-            VALUES (1, 1, 'Ivan', '87516562122'),
-                   (2, 2, 'Sonya', '87516562222'),
-                   (3, 3, 'Pavel', '87516562225');
+            INSERT INTO public.teachers (id, subject_id, name, is_union_member, work_experience, phone_number)
+            VALUES (1, 1, 'Ivan', true, 3.7, '87516562122'),
+                   (2, 2, 'Sonya', false, 2.5, '87516562222'),
+                   (3, 3, 'Pavel', false, 12, '87516562225');
         END IF;
     END
 $$;
@@ -297,3 +304,22 @@ $$
         END IF;
     END
 $$;
+
+DROP SEQUENCE IF EXISTS teachers_id_seq;
+SELECT MAX(id) + 1 FROM teachers;
+CREATE SEQUENCE teachers_id_seq START WITH 5;
+ALTER TABLE teachers ALTER COLUMN id SET DEFAULT nextval('teachers_id_seq');
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to schooluser;
+
+-- UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'schooltestdb';
+-- SELECT pg_terminate_backend(pg_stat_activity.pid)
+-- FROM pg_stat_activity
+-- WHERE pg_stat_activity.datname = 'schooltestdb' AND pid <> pg_backend_pid();
+
+-- ALTER TABLE lessons 
+--   DROP CONSTRAINT IF EXISTS teachers_id;
+-- ALTER TABLE lessons  
+--   ADD CONSTRAINT teachers_id
+--   FOREIGN KEY (teachers_id) 
+--   REFERENCES teachers(id) 
+--   ON DELETE CASCADE;
