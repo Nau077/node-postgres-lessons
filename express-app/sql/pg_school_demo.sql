@@ -116,7 +116,7 @@ $$
                 id           SERIAL PRIMARY KEY,
                 name         VARCHAR(50) NOT NULL,
                 phone_number TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+                created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
             ); 
         END IF;
     END
@@ -141,7 +141,7 @@ $$
                 students_id  INTEGER NOT NULL,
                 subjects_id INTEGER NOT NULL,
                 FOREIGN KEY (students_id) REFERENCES students (id) ON DELETE CASCADE,
-                FOREIGN KEY (subjects_id) REFERENCES subjects (id)
+                FOREIGN KEY (subjects_id) REFERENCES subjects (id) ON DELETE CASCADE
             );
         END IF;
     END
@@ -162,8 +162,8 @@ $$
             (
                 id                      SERIAL PRIMARY KEY,
                 subjects_students_id    INTEGER NOT NULL,
-                teachers_id             INTEGER NOT NULL,
-                FOREIGN KEY (teachers_id) REFERENCES teachers (id) ON DELETE CASCADE,
+				lessons_start_time      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+				lessons_end_time        TIMESTAMP    DEFAULT CURRENT_TIMESTAMP + INTERVAL '2 hour',
                 FOREIGN KEY (subjects_students_id) REFERENCES subjectsstudents (id)
             );
         END IF;
@@ -183,10 +183,10 @@ $$
         THEN
             CREATE TABLE payment
             (
-                id         SERIAL PRIMARY KEY,
-                lessons_id INTEGER NOT NULL,
-                payment_start_time  TIMESTAMP,
-				payment_end_time  TIMESTAMP,
+                id                    SERIAL PRIMARY KEY,
+                lessons_id            INTEGER NOT NULL,
+                payment_start_time    TIMESTAMP,
+				payment_end_time      TIMESTAMP,
                 payment_amount        DECIMAL,
                 FOREIGN KEY (lessons_id) REFERENCES lessons (id) ON DELETE CASCADE
             );
@@ -280,10 +280,10 @@ $$
              WHERE id = 1
             )
         THEN
-            INSERT INTO public.lessons (teachers_id, subjects_students_id, id)
-            VALUES (1, 1, 1),
-                   (2, 2, 2),
-                   (3, 3, 3);
+            INSERT INTO public.lessons (subjects_students_id, id)
+            VALUES (1, 1),
+                   (2, 2),
+                   (3, 3);
         END IF;
     END
 $$;
