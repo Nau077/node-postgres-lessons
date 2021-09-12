@@ -265,7 +265,8 @@ $$
             INSERT INTO public.subjectsstudents (id, students_id, subjects_id)
             VALUES (1, 1, 1),
                    (2, 1, 2),
-                   (3, 2, 3);
+                   (3, 2, 3),
+				   (4, 3, 3)
         END IF;
     END
 $$;
