@@ -1,6 +1,7 @@
 const UserRepository = require("../../data-layer/students.repository");
+const Student = require("../entities/student.entity");
 
-module.exports = class Student {
+module.exports = class StudentUseCase {
   getStudents() {
     const userRepository = new UserRepository();
     return userRepository.getAllStudents();
@@ -8,7 +9,10 @@ module.exports = class Student {
 
   getOneStudent(id) {
     const userRepository = new UserRepository();
-    return userRepository.getOneStudent(id);
+    const studentData = userRepository.getOneStudent(id);
+    const student = new Student(studentData);
+
+    return student.$student;
   }
 
   updateStudent(phone_number, id) {
