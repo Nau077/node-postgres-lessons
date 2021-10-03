@@ -1,0 +1,23 @@
+команды по psql из урока:
+
+psql -U postgres
+\! chcp 1251 - исправим кодировку
+\l - какие бд установлены
+\! clear - затем очистим консоль 
+
+\du; - посмотреть юзеров
+drop database schooltestdb;
+drop user schooluser;
+create user schooluser with password 'admin';
+create database schooltestdb;
+
+
+подключимся к созданной бд 
+psql -U schooluser schooltestdb
+
+из под psql postgres:
+\c schooltestdb schooluser;
+
+создадим таблицу предметов:
+create table subjects;
+\dt - посмотрим созданные таблицы

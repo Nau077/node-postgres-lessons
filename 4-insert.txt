@@ -1,0 +1,9 @@
+insert into subjects (name) 
+values  ('python');
+
+---
+
+с указанием id:
+
+insert into subjects
+values  (10, 'java');

@@ -1,0 +1,134 @@
+взять всё:
+
+select * from teachers where name = 'Ivan';
+---
+
+>
+select * from teachers where work_experience > 2 and is_union_member = false;
+---
+
+and, not in:
+
+select * from teachers where work_experience > 2 and is_union_member not in (false);
+---
+
+>, or:
+
+select * from teachers where work_experience > 3 or name = ('Sonya');
+---
+
+group by:
+
+select count(id), is_union_member from teachers group by is_union_member;
+---
+
+2 params at group by:
+
+select name, count(id), is_union_member from teachers group by name, is_union_member;
+---
+
+as + group by:
+
+select name, count(id) as number_of_teachers, is_union_member from teachers group by is_union_member, name;
+---
+
+group by + where:
+
+select name, count(id) as number_of_teachers, is_union_member from teachers
+where name = 'Ivan'
+group by is_union_member, name;
+---
+
+group by + having:
+
+HAVING — необязательный элемент запроса, который отвечает за фильтрацию на уровне сгруппированных данных
+
+select name, id, is_union_member from teachers
+group by is_union_member, name, id
+having id >1;
+
+---
+
+
+order by (desc):
+
+select name, id, is_union_member from teachers
+order by id desc;
+
+---
+case:
+
+select id, name, subject_id, is_union_member,
+case is_union_member
+	when false then 'worker does not have class consciousness'
+	when true then 'worker is union member'
+   	end  workers_union_state
+from teachers;
+
+---
+
+like - выборка по завершению строки
+
+SELECT *
+FROM teachers
+WHERE name LIKE '%a'
+
+---
+
+distinct -  выборка уникальных значений
+
+SELECT DISTINCT subjects_id
+FROM subjectsstudents
+--
+
+offset and limit/пагинация
+OFFSET говорит, что нужно пропустить это количество строк, прежде чем начать возвращать строки. OFFSET 0 - это то же самое, что и исключение предложения OFFSET. Если появляются и OFFSET, и LIMIT, то строки OFFSET пропускаются перед началом подсчета возвращаемых LIMIT строк.
+
+select * from teachers
+order by id
+offset 0 limit 3;
+
+---
+
+join варианты
+INNER JOIN получает все записи, которые являются общими для обеих таблиц на основе внешнего ключа
+LEFT JOIN получает все записи из связанной таблицы LEFT, но если вы выбрали некоторые столбцы из таблицы RIGHT, если нет связанных записей, эти столбцы будут содержать NULL
+RIGHT JOIN похоже на приведенное выше, но получает все записи в таблице RIGHT
+FULL JOIN получает все записи из обеих таблиц и помещает NULL в столбцы, где соответствующие записи не существуют в противоположной таблице
+
+
+inner join
+
+select teachers.name as teacher_name, teachers.id as teacher_id, subjects.name as subject_name 
+from teachers inner join subjects 
+on teachers.subject_id = subjects.id;
+
+right join
+
+select teachers.name as teacher_name, teachers.id as teacher_id, subjects.name as subject_name 
+from teachers right join subjects 
+on teachers.subject_id = subjects.id;
+
+----
+вложенный запрос
+
+select name as teacher_name, id as teacher_id
+from teachers
+where subject_id  = (
+					select id
+				   	from subjects
+					where name = 'Biology'
+				 );
+
+----
+
+max
+
+SELECT MAX(work_experience)
+FROM teachers;
+
+или
+
+SELECT *
+FROM   teachers
+WHERE work_experience=(select max(work_experience) from teachers);

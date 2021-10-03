@@ -1,0 +1,47 @@
+update teachers
+set name = 'Vasya'
+where name = 'Ivan';
+
+----
+с case выражением
+
+UPDATE teachers
+SET is_union_member = CASE 
+WHEN is_union_member = false 
+THEN true
+ELSE false
+END;
+
+----
+
+trunsaction:
+
+Atomicity — Атомарность
+Consistency — Согласованность
+Isolation — Изолированность
+Durability — Надёжность
+
+
+Уровень изоляции Serializable
+ 
+Уровень изоляции Read Committed:
+ 
+По умолчанию в PostgreSQL уровень изоляции Read Committed. Такой уровень изоляции всегда позволяет видеть изменения внесённые успешно завершёнными транзакциями в оставшихся параллельно открытых транзакциях. В транзакции, работающей на этом уровне, запрос SELECT (без предложения FOR UPDATE/SHARE) видит только те данные, которые были зафиксированы до начала запроса; он никогда не увидит незафиксированных данных или изменений, внесённых в процессе выполнения запроса параллельными транзакциями. По сути запрос SELECT видит снимок базы данных в момент начала выполнения запроса. Однако SELECT видит результаты изменений, внесённых ранее в этой же транзакции, даже если они ещё не зафиксированы. Также заметьте, что два последовательных оператора SELECT могут видеть разные данные даже в рамках одной транзакции, если какие-то другие транзакции зафиксируют изменения после выполнения первого SELECT.
+подробнее:
+
+https://habr.com/ru/post/555920/#isolation
+https://habr.com/ru/post/537594/
+
+пример транзакции:
+
+BEGIN TRANSACTION ;
+
+UPDATE subjects 
+SET name =  name || '_' || 'bad-language'
+WHERE id = 10;
+
+UPDATE subjects 
+SET name = name || '_' || 'bad-language'
+WHERE id = 7;
+
+COMMIT TRANSACTION ;
