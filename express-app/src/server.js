@@ -4,9 +4,9 @@ const express = require("express");
 const app = express();
 const config = require("../config/express.config");
 const server = http.createServer(app);
+const { routeInit } = require("./presentation-layer/routes");
 
-require("./presentation-layer/routes/students.routes")(app);
-require("./presentation-layer/routes/teachers.routes")(app);
+routeInit(app);
 
 server.listen(config.PORT, () => {
   console.log(`Server is running on port ${config.PORT}.`);

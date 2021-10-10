@@ -13,6 +13,6 @@ module.exports = function(app) {
 
   app.get("/api/teachers/", jsonParser, teachersController.getTeachers);
   app.patch("/api/teacher/", jsonParser, teachersController.updateTeacher);
-  app.delete("/api/teacher/", jsonParser, teachersController.removeTeacher)
-  app.post("/api/teacher/", jsonParser, teachersController.addTeacher)
+  app.delete("/api/teacher/", jsonParser, teachersController.removeTeacher);
+  app.post("/api/teacher/", jsonParser, teachersController.addTeacher);
 };

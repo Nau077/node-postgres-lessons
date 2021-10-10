@@ -27,7 +27,7 @@ module.exports = class StudentRepository {
     try {
       const student = await knex("students")
         .where({ id: id })
-        .update({"phone_number":  phone_number}, ["id", "name", "phone_number"])
+        .update({ phone_number: phone_number }, ["id", "name", "phone_number"]);
 
       return student;
     } catch (e) {

@@ -266,7 +266,7 @@ $$
             VALUES (1, 1, 1),
                    (2, 1, 2),
                    (3, 2, 3),
-				   (4, 3, 3)
+				   (4, 3, 3);
         END IF;
     END
 $$;
@@ -281,7 +281,7 @@ $$
              WHERE id = 1
             )
         THEN
-            INSERT INTO public.lessons (subjects_students_id, id)
+            INSERT INTO public.lessons (id, subjects_students_id )
             VALUES (1, 1),
                    (2, 2),
                    (3, 3);
@@ -306,21 +306,21 @@ $$
     END
 $$;
 
-DROP SEQUENCE IF EXISTS teachers_id_seq;
-SELECT MAX(id) + 1 FROM teachers;
-CREATE SEQUENCE teachers_id_seq START WITH 5;
-ALTER TABLE teachers ALTER COLUMN id SET DEFAULT nextval('teachers_id_seq');
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to schooluser;
+-- DROP SEQUENCE IF EXISTS teachers_id_seq;
+-- SELECT MAX(id) + 1 FROM teachers;
+-- CREATE SEQUENCE teachers_id_seq START WITH 5;
+-- ALTER TABLE teachers ALTER COLUMN id SET DEFAULT nextval('teachers_id_seq');
+-- GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to schooluser;
 
--- UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'schooltestdb';
--- SELECT pg_terminate_backend(pg_stat_activity.pid)
--- FROM pg_stat_activity
--- WHERE pg_stat_activity.datname = 'schooltestdb' AND pid <> pg_backend_pid();
+-- -- UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'schooltestdb';
+-- -- SELECT pg_terminate_backend(pg_stat_activity.pid)
+-- -- FROM pg_stat_activity
+-- -- WHERE pg_stat_activity.datname = 'schooltestdb' AND pid <> pg_backend_pid();
 
--- ALTER TABLE lessons 
---   DROP CONSTRAINT IF EXISTS teachers_id;
--- ALTER TABLE lessons  
---   ADD CONSTRAINT teachers_id
---   FOREIGN KEY (teachers_id) 
---   REFERENCES teachers(id) 
---   ON DELETE CASCADE;
+-- -- ALTER TABLE lessons 
+-- --   DROP CONSTRAINT IF EXISTS teachers_id;
+-- -- ALTER TABLE lessons  
+-- --   ADD CONSTRAINT teachers_id
+-- --   FOREIGN KEY (teachers_id) 
+-- --   REFERENCES teachers(id) 
+-- --   ON DELETE CASCADE;

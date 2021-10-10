@@ -3,16 +3,24 @@ const Student = require("../entities/student.entity");
 
 module.exports = class StudentUseCase {
   getStudents() {
-    const userRepository = new UserRepository();
-    return userRepository.getAllStudents();
+    try {
+      const userRepository = new UserRepository();
+      return userRepository.getAllStudents();
+    } catch (error) {
+      throw error;
+    }
   }
 
   getOneStudent(id) {
-    const userRepository = new UserRepository();
-    const studentData = userRepository.getOneStudent(id);
-    const student = new Student(studentData);
+    try {
+      const userRepository = new UserRepository();
+      const studentData = userRepository.getOneStudent(id);
+      const student = new Student(studentData);
 
-    return student.$student;
+      return student.$student;
+    } catch (error) {
+      throw error;
+    }
   }
 
   updateStudent(phone_number, id) {
