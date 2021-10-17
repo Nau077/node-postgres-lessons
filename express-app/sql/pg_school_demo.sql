@@ -306,11 +306,11 @@ $$
     END
 $$;
 
--- DROP SEQUENCE IF EXISTS teachers_id_seq;
--- SELECT MAX(id) + 1 FROM teachers;
--- CREATE SEQUENCE teachers_id_seq START WITH 5;
--- ALTER TABLE teachers ALTER COLUMN id SET DEFAULT nextval('teachers_id_seq');
--- GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to schooluser;
+DROP SEQUENCE IF EXISTS teachers_id_seq;
+SELECT MAX(id) + 1 FROM teachers;
+CREATE SEQUENCE teachers_id_seq START WITH 5;
+ALTER TABLE teachers ALTER COLUMN id SET DEFAULT nextval('teachers_id_seq');
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to schooluser;
 
 -- -- UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'schooltestdb';
 -- -- SELECT pg_terminate_backend(pg_stat_activity.pid)
