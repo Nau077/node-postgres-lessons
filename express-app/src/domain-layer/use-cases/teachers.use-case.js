@@ -77,19 +77,30 @@ module.exports = class TeacherUseCase {
       const error = new ApiError("422", "Нет данных для обновления");
       throw error;
     }
+    const fields = data.fields;
+    const isStringChecked = this.checkStringFieldsInsert(fields);
+    if (!isStringChecked) {
+      let error = new ApiError("422", "Неверные поля переданы");
+      throw error;
+    }
 
     try {
-      const fields = data.fields;
-      const teacher = await teacherRepository.addTeacher(fields);
+      const teacher = await teacherRepository.addTeacher(this.reducefields(fields));
       return teacher;
     } catch (error) {
       throw error;
     }
   }
 
-  removeTeacher(id) {
+  async removeTeacher(id) {
+    try {
     const teacherRepository = new TeacherRepository();
-    return teacherRepository.removeOneTeacher(id);
+    const result = await teacherRepository.removeOneTeacher(id);
+
+    return result;
+    } catch (error) {
+        throw error;
+    }
   }
 
   checkStringFields(fields) {
@@ -112,5 +123,19 @@ module.exports = class TeacherUseCase {
       acc[entriesEl[0][0]] = entriesEl[0][1];
       return acc;
     }, {});
+  }
+
+  checkStringFieldsInsert(fields) {
+    const keys = fields.map(val => {
+      return Object.entries(val)[0][0];
+    });
+
+    const IS_VALID = true;
+
+    for (let i = 0; i < keys.length; i++) {
+      if (!(keys[i] in this.mapFields)) return !IS_VALID;
+    }
+  
+    return IS_VALID;
   }
 };

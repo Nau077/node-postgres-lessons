@@ -76,7 +76,9 @@ exports.removeTeacher = async (req, res) => {
     const id = req.query.id;
 
     try {
+      const teachersUseCase = new TeachersUseCase();
       const teacher = await teachersUseCase.removeTeacher(id);
+
       return res.status(200).send(teacher);
     } catch (error) {
       if (error instanceof ApiError) {
