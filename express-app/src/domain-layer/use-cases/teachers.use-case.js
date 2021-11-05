@@ -41,9 +41,9 @@ module.exports = class TeacherUseCase {
   async addTeacher(data) {
     const teacherRepository = new TeacherRepository();
 
-    if (!data.fields && !Array.isArray(data.fields) && !data.fields.length) {
+    if (!data.fields || !Array.isArray(data.fields) || !data.fields.length) {
         throw "Нет данных для вставки";
-    }
+    };
 
     const fields = data.fields;
     const isStringChecked = this.checkStringFieldsInsert(fields);
@@ -75,18 +75,18 @@ module.exports = class TeacherUseCase {
   async updateTeacher(data) {
     const teacherRepository = new TeacherRepository();
 
-    if (!data.fields && !Array.isArray(data.fields) && !data.fields.length) {
-        throw "Нет данных для обновления";
-    }
+    if (!data.fields || !Array.isArray(data.fields) || !data.fields.length) {
+        throw "Нет данных для обновления"
+    };
 
-    const elWithId = data.fields.find(el => el.id)
+    const elWithId = data.fields.find(el => el.id);
 
     if (!elWithId) {
         throw "Нет id для обновления"
     };
 
     const fields = data.fields;
-    const isStringChecked  = this.checkStringFields(fields);
+    const isStringChecked = this.checkStringFields(fields);
 
     if (!isStringChecked) {
         throw "Неверные поля переданы"
@@ -94,8 +94,8 @@ module.exports = class TeacherUseCase {
 
     try {
         const updatedTeacher = await teacherRepository.updateOneTeacher(elWithId.id, this.reduceFields(fields));
- 
         const teacher = new Teacher(updatedTeacher);
+
         return teacher;
     } catch (error) {
         throw error;
@@ -117,18 +117,18 @@ module.exports = class TeacherUseCase {
   };
 
   checkStringFields(fields) {
-    const IS_VALID = true;
-    const fieldsNormalized = fields
-        .map(el => Object.entries(el)[0][0])
-        
-    fieldsNormalized.some(([key, _]) => {
-        if (!this.mapFields[key]) {
-            return !IS_VALID
-        }
-    });
+      const IS_VALID = true;
+      const fieldsNormalized = fields
+        .map(el => Object.entries(el)[0][0]);
 
-    return IS_VALID;
-  };
+        fieldsNormalized.some(([key, _]) => {
+            if (!this.mapFields[key]) {
+                return !IS_VALID
+            };
+        });
+
+        return IS_VALID;
+  }
 
   reduceFields(fields) {
       return fields.reduce((acc, el) => {

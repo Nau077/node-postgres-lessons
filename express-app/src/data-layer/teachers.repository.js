@@ -80,16 +80,15 @@ module.exports = class TeachersRepository {
     }
 
     async updateOneTeacher(id, fields) {
-        const trx = await knex.transaction();
-
         try {
-            const  result = await knex(TEACHERS_TABLE)
-                .transacting(trx)
+            const result = await knex(TEACHERS_TABLE)
                 .where({id})
                 .update({...fields, ...{updated_at: new Date()}})
                 .returning("*")
-                
-            await trx.commit();
+
+            if (!result[0].id) {
+                throw "Не найти запись при обновлении"
+            }
 
             const updatedTeacher = await knex(TEACHERS_TABLE)
                 .innerJoin("subjects", "teachers.subject_id", "subjects.id")
@@ -98,18 +97,18 @@ module.exports = class TeachersRepository {
                     "teachers.id",
                     "teachers.is_union_member",
                     "teachers.work_experience",
-                    "subjects.name as subject_name"
+                    "subjects.name as subject_name"                    
                 )
                 .where({"teachers.id": result[0].id})
-            
-            
-            
-            if (!updatedTeacher[0]) throw "Нет данных";
+
+            if (!updatedTeacher[0]) {
+                throw "Нет данных"
+            }
 
             return updatedTeacher[0];
         } catch (error) {
-            trx.rollback();
             throw error;
         }
     }
+
 }
