@@ -3,7 +3,7 @@ module.exports = class Payment {
     this.payment = {
       lesson_id: payment.lessonId,
       payment_amount: payment.paymentAmount,
-      payment_time: payment.paymentTime
+      payment_time: payment.paymentTime,
     };
   }
 

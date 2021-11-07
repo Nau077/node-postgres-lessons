@@ -5,7 +5,7 @@ module.exports = class LessonstUseCase {
   async getLessons(offset, limit) {
     const lessonsRepository = new LessonsRepository();
     const lessons = await lessonsRepository.getLessons(offset, limit);
-    const lessonsNormalized = lessons.map(el => {
+    const lessonsNormalized = lessons.map((el) => {
       return new Lesson(el);
     });
 
@@ -26,7 +26,7 @@ module.exports = class LessonstUseCase {
     const lessonsRepository = new LessonsRepository();
 
     return lessonsRepository.addLesson({
-      subjects_students_id: subjectStudensId
+      subjects_students_id: subjectStudensId,
     });
   }
 };

@@ -6,7 +6,7 @@ module.exports = class Lesson {
       student: lesson.students_name,
       lesson_start_time: lesson.lessons_start_time,
       lesson_end_time: lesson.lessons_end_time,
-      subjects_students_id: lesson.subjects_students_id
+      subjects_students_id: lesson.subjects_students_id,
     });
   }
 

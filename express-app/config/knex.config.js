@@ -5,6 +5,6 @@ module.exports = require("knex")({
     port: process.env.DB_PORT,
     user: "schooluser",
     password: "admin",
-    database: "schooltestdb"
-  }
+    database: "schooltestdb",
+  },
 });

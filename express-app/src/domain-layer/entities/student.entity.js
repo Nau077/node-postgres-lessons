@@ -3,7 +3,7 @@ module.exports = class Student {
     this.student = {
       id: student.id,
       name: student.name,
-      phone_number: student.phone_number
+      phone_number: student.phone_number,
     };
   }
 

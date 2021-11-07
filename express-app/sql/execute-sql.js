@@ -7,18 +7,18 @@ const config = {
   user: "schooluser",
   database: "schooltestdb",
   password: "admin",
-  port: process.env.DB_PORT
+  port: process.env.DB_PORT,
 };
 
 const pool = new pg.Pool(config);
 
-pool.connect(function(err, client, done) {
+pool.connect(function (err, client, done) {
   if (err) {
     console.log("error: ", err);
     process.exit(1);
   }
 
-  client.query(sql, function(err, _) {
+  client.query(sql, function (err, _) {
     done();
     if (err) {
       console.log("error: ", err);

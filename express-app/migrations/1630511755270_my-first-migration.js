@@ -2,9 +2,9 @@
 
 exports.shorthands = undefined;
 
-exports.up = pgm => {
+exports.up = (pgm) => {
   pgm.addColumns("teachers", {
-    work_experience: { type: "text" }
+    work_experience: { type: "text" },
   });
 };
 
