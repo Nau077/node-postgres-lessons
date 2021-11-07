@@ -1,16 +1,9 @@
 const TeacherRepository = require("../../data-layer/teachers.repository");
-const Teacher = require("../entities/teacher.entitiy");
+const Teacher = require("../entities/teacher.entity");
+const HandlerUseCase = require("./common/handler.use-case");
+const { PropertyRequiredError, errors } = require("../../utils/error.util");
 
-module.exports = class TeacherUseCase {
-
-  mapFields = {
-    id: "id",
-    name: "name",
-    work_experience: "work_experience",
-    phone_number: "phone_number",
-    subject_id: "subject_id",
-    is_union_member: "is_union_member"
-  }
+module.exports = class TeacherUseCase extends HandlerUseCase{
 
   async getTeachers() {
     const teacherRepository = new TeacherRepository();
@@ -42,14 +35,14 @@ module.exports = class TeacherUseCase {
     const teacherRepository = new TeacherRepository();
 
     if (!data.fields || !Array.isArray(data.fields) || !data.fields.length) {
-        throw "Нет данных для вставки";
+        throw new PropertyRequiredError(errors.get("NO_PROPERTY")); 
     };
 
     const fields = data.fields;
     const isStringChecked = this.checkStringFieldsInsert(fields);
 
     if (!isStringChecked) {
-        throw "Неверные поля переданы"
+        throw new PropertyRequiredError(errors.get("NO_PROPERTY")); 
     }
 
     try {
@@ -76,20 +69,20 @@ module.exports = class TeacherUseCase {
     const teacherRepository = new TeacherRepository();
 
     if (!data.fields || !Array.isArray(data.fields) || !data.fields.length) {
-        throw "Нет данных для обновления"
+        throw new PropertyRequiredError(errors.get("NO_PROPERTY"));
     };
 
     const elWithId = data.fields.find(el => el.id);
 
     if (!elWithId) {
-        throw "Нет id для обновления"
+        throw new PropertyRequiredError(errors.get("NO_PROPERTY"));
     };
 
     const fields = data.fields;
     const isStringChecked = this.checkStringFields(fields);
 
     if (!isStringChecked) {
-        throw "Неверные поля переданы"
+        throw new PropertyRequiredError(errors.get("NO_PROPERTY"));
     };
 
     try {
@@ -101,41 +94,4 @@ module.exports = class TeacherUseCase {
         throw error;
     }
   }
-
-  checkStringFieldsInsert(fields) {
-      const keys = fields.map(val => {
-          return Object.entries(val)[0][0];
-      });
-
-      const IS_VALID = true;
-
-      for (let i = 0; i < keys.length; i++) {
-          if (!(keys[i]) in this.mapFields) return !IS_VALID;
-      }
-
-      return IS_VALID;
-  };
-
-  checkStringFields(fields) {
-      const IS_VALID = true;
-      const fieldsNormalized = fields
-        .map(el => Object.entries(el)[0][0]);
-
-        fieldsNormalized.some(([key, _]) => {
-            if (!this.mapFields[key]) {
-                return !IS_VALID
-            };
-        });
-
-        return IS_VALID;
-  }
-
-  reduceFields(fields) {
-      return fields.reduce((acc, el) => {
-          const entriesEl = Object.entries(el);
-          acc[entriesEl[0][0]] = entriesEl[0][1]
-
-          return acc;
-      }, {})
-  };
 };

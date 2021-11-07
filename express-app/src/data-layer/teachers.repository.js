@@ -1,5 +1,6 @@
 const knex = require("../../config/knex.config");
 const TEACHERS_TABLE = "teachers";
+const { DataBaseError, errors } = require("../utils/error.util");
 
 module.exports = class TeachersRepository {
   async getTeachers() {
@@ -35,7 +36,9 @@ module.exports = class TeachersRepository {
         )
         .where({ "teachers.id": id });
 
-      if (!teacher[0]) throw "Нет данных";
+      if (!teacher[0]) {
+        throw new DataBaseError(errors.get("DATA_BASE_ERROR") + " "  + " нет данных"); 
+      };
       return teacher[0];
     } catch (error) {
       throw error;
@@ -69,7 +72,9 @@ module.exports = class TeachersRepository {
                 })
                 .returning("id");
 
-           if (!result[0]) throw `Нет записи, найденных при удалении по соотв. параметру: ${id}`;
+           if (!result[0]) {
+             throw new DataBaseError(errors.get("DATA_BASE_ERROR") + " "  + ". Нет записи по id: " + id);   
+           }
 
            return {
                id : result[0]
@@ -87,7 +92,8 @@ module.exports = class TeachersRepository {
                 .returning("*")
 
             if (!result[0].id) {
-                throw "Не найти запись при обновлении"
+                console.error(error);
+                throw new DataBaseError(errors.get("DATA_BASE_ERROR") + " "  + ". Нет записи по id: " + id); 
             }
 
             const updatedTeacher = await knex(TEACHERS_TABLE)
@@ -102,13 +108,14 @@ module.exports = class TeachersRepository {
                 .where({"teachers.id": result[0].id})
 
             if (!updatedTeacher[0]) {
-                throw "Нет данных"
+                console.error(error);
+                throw new DataBaseError(errors.get("DATA_BASE_ERROR") + " "  + "Нет данных"); 
             }
 
             return updatedTeacher[0];
         } catch (error) {
-            throw error;
+            console.error(error);
+            throw new DataBaseError(errors.get("DATA_BASE_ERROR") + " "  + ". Нет id: " + id); 
         }
     }
-
 }
