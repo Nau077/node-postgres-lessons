@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "lint": "eslint --fix . --ext .js --fix ",
-    "dev": "nodemon ./src/server.js"
+    "dev": "nodemon ./src/server.js",
+    "migrate": "node-pg-migrate"
   },
   "author": "r.tolokontsev",
   "license": "ISC",
@@ -35,6 +36,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "knex": "^0.95.11",
+    "node-pg-migrate": "^6.0.0",
     "nodemon": "^2.0.13",
     "pg": "^8.7.1"
   }

@@ -59,7 +59,7 @@ module.exports = class TeachersRepository {
       return result;
     } catch (error) {
       await trx.rollback();
-      throw "Ошибка атомарности " + error;
+      throw new DataBaseError(errors.get("DATA_BASE_ERROR"));
     }
   }
 
