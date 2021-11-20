@@ -22,6 +22,22 @@ exports.signUp = async (req, res) => {
 };
 
 exports.signIn = async (req, res) => {
- 
+    if (!req.body || !req.body.accesory || !req.body.fields) throw res.json("hahakek");
+
+    const accesory = req.body.accesory;
+    const { userName, password } = req.body.fields;
+
+    try {
+        switch (accesory) {
+            case "students":
+                const authUseCase = new AuthUseCase(new StudentsUseCase);
+                authUseCase.signIn(userName, password)
+                break;
+            default:
+                break;
+        }    
+    } catch (error) {
+        throw(error)
+    }    
  
 };

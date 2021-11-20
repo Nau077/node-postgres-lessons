@@ -7,8 +7,8 @@ module.exports = class AuthUseCase {
         this.useCase = useCase;
     }
 
-    async signIn(username, password) {
-        const user = await this.useCase.getOne(id);
+    async signIn(phoneNumber, password) {
+        const user = await this.useCase.getOne(phoneNumber);
     
         if (!user) {
           return {

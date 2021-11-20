@@ -25,12 +25,12 @@ module.exports = class StudentRepository {
     }
   }
 
-  async getOneStudent(id) {
+  async getOneStudent(phoneNumber) {
     try {
       const student = await knex
         .select("id", "name", "phone_number")
         .from("students")
-        .where({ id: id });
+        .where({ phone_number: phoneNumber });
 
       return student;
     } catch (e) {

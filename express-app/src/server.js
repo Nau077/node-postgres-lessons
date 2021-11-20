@@ -11,9 +11,17 @@ routeInit(app, express);
 server.listen(config.PORT, () => {
   console.log(`Server is running on port ${config.PORT}.`);
 });
-
+// добавить соответствующий env
 // DB_PORT=5433
 // DATABASE_URL=schooluser://schooluser:admin@localhost:5433/schooltestdb
 // npm install node-pg-migrate  
 // npm run migrate create my first migration
 // DATABASE_URL=postgres://test:test@localhost:5432/test npm run migrate up
+
+// npm run migrate create token table
+// npm run migrate up
+
+
+// mapFields сделать нормальным - добавить через super вызов
+// сделать переименование на addOne, getOne
+// getOne student по phoneNumber идёт
