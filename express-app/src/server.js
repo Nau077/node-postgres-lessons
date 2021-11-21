@@ -25,3 +25,7 @@ server.listen(config.PORT, () => {
 // mapFields сделать нормальным - добавить через super вызов
 // сделать переименование на addOne, getOne
 // getOne student по phoneNumber идёт
+
+// ***
+// сделать ошибки для авторизации
+// сделать
