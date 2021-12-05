@@ -20,6 +20,7 @@ module.exports = class HandlerUseCase {
   }
 
   checkStringFields(fields) {
+
     const IS_VALID = true;
     const fieldsNormalized = fields.map((el) => Object.entries(el)[0][0]);
 

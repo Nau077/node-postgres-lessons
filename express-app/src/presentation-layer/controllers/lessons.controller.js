@@ -1,5 +1,4 @@
 const LessonsUseCase = require("../../domain-layer/use-cases/lessons.use-case");
-const ApiError = require("../../utils/ErrorHelper");
 
 exports.getLessons = async (req, res) => {
   try {
@@ -20,11 +19,7 @@ exports.getLessons = async (req, res) => {
       return res.status(200).send(lessons);
     }
   } catch (error) {
-    if (error instanceof ApiError) {
-      return res.status(error.code).send(error.message);
-    } else {
       return res.status(400).send(error);
-    }
   }
 };
 
@@ -38,10 +33,7 @@ exports.addLesson = async (req, res) => {
       return res.status(200).send(student);
     }
   } catch (error) {
-    if (error instanceof ApiError) {
-      return res.status(error.code).send(error.message);
-    } else {
+ 
       return res.status(400).send(error);
-    }
   }
 };

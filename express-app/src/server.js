@@ -27,5 +27,11 @@ server.listen(config.PORT, () => {
 // getOne student по phoneNumber идёт
 
 // ***
-// сделать ошибки для авторизации
-// сделать
+
+// verify-sign-up.middleware - прописать мидлваре в auth.routes
+// расписать ошибки в классе ошибки по всей авторизации
+// протестировать регистрацию, взаимодействие с токенами
+
+// в tokens-helper в payload не приходит userId в payload
+// т.к в payload попадают данные из payload refresh токена
+// решить вопрос

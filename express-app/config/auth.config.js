@@ -1,12 +1,12 @@
 module.exports = {
     accessToken: {
         salt: "secret",
-        expired: "7d",
+        expired: "1min",
         type: "access"
     },
     refreshToken: {
         salt: "secret",
-        expired: "1m",
+        expired: "35m",
         type: "refresh"
     }
   };

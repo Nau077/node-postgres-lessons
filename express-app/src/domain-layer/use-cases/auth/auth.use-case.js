@@ -1,36 +1,50 @@
 const TokensRepository = require("../../../data-layer/tokens.repository");
 const HandlerUseCase = require("../common/handler.use-case");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const config = require("../../../../config/auth.config");
-const TokensHelper = require("./tokens.helper");
+const { TokensHelper, AccessToken, RefreshToken } = require("./tokens.helper");
 
 module.exports = class AuthUseCase extends HandlerUseCase{
     useCase;
     tokensRepository;
+    refreshToken;
 
-    constructor({ useCase }) {
-        this.useCase = useCase;
-        this.tokensRepository = new TokensRepository();
-        this.tokensHelper = new TokensHelper();
-        
-        super.mapFields = {
+    constructor(useCase) {
+        const mapFields = {
             userId: "userId",
             token: "token"
           };
+
+        super(mapFields);
+        
+        this.useCase = useCase;
+        this.refreshToken = new RefreshToken();
+        this.tokensRepository = new TokensRepository();
+
+        const accessToken = new AccessToken();
+        const tokensRepository = this.tokensRepository;
+        const refreshToken = this.refreshToken;
+
+        this.tokensHelper = new TokensHelper({ 
+            tokensRepository,
+            accessToken,
+            refreshToken
+        });
     }
 
-    async signIn(phoneNumber, password) {
+    async signIn({role, phoneNumber, password}) {
         const user = await this.useCase.getOne(phoneNumber);
-    
+
         if (!user) {
           return {
             code: 401,
             message: "Пользователь не найден"
           };
         }
-    
-        const passwordIsValid = bcrypt.compareSync(password, user.password);
-    
+
+        const passwordIsValid = bcrypt.compareSync(String(password), String(user.password));
+        
         if (!passwordIsValid) {
           return res.status(401).send({
             code: 401,
@@ -38,8 +52,12 @@ module.exports = class AuthUseCase extends HandlerUseCase{
             message: "Пользователь не найден"
           });
         }
+        const payload = {
+            role,
+            userId: user.id
+        }
  
-        const tokens = await this.tokensHelper.updateTokens(user.id);
+        const tokens = await this.tokensHelper.updateTokens(payload);
 
         return {
           code: 200,
@@ -48,17 +66,26 @@ module.exports = class AuthUseCase extends HandlerUseCase{
         };
       }
 
-      async signUp(data) {
-        const useCase = new this.UseCase();
-
+      async signUp(fields) {
+        const testFields = [...fields];
+        const password = testFields.find(el => el.password);
+        const passwordIndex = testFields.findIndex(el => el.password);
+ 
         try {
-          const hashedPassword = bcrypt.hashSync(password, 8);
+          const hashedPassword = bcrypt.hashSync(String(password["password"]), 8);
+
+            testFields.splice(1, passwordIndex);
+            testFields.push({"password": hashedPassword})
+
           const payload = {
-            ...data,
-            password: hashedPassword,
+            data: {
+                fields: [
+                    ...testFields
+                ]
+            }
           };
 
-          const message = await useCase.createOne(payload);
+          const message = await this.useCase.addOne(payload);
     
           return message;
         } catch (error) {
@@ -68,10 +95,11 @@ module.exports = class AuthUseCase extends HandlerUseCase{
 
       async refreshTokens(refreshToken) {
 
-        let payload;
+        let userId;
 
         try {
-            payload = jwt.verify(refreshToken, config.refreshToken.salt)
+           const payload = jwt.verify(refreshToken, config.refreshToken.salt)
+            userId = payload.userId;
 
             if (payload.type !== "refresh") {
                 throw "invalid token"
@@ -83,14 +111,29 @@ module.exports = class AuthUseCase extends HandlerUseCase{
             } else if (
                 e instanceof jwt.JsonWebTokenError
             ) {
-                throw "invaluid token"
+                throw "invalid token"
+            } else {
+                throw("unexpected error")
             }
         }
+ 
+        const tokenData =  await this.refreshToken.getToken({
+            userId,
+            tokensRepository: this.tokensRepository
+        });
 
-        const tokens = await this.tokensHelper.updateTokens(payload.userId);
+        if (!tokenData) {
+            throw "no refresh token at db"
+        }
+
+        const tokens =  await this.tokensHelper.updateTokens({
+            role: tokenData.role,
+            userId: tokenData.userId
+        }).catch(error => {
+            throw error
+        });
 
         return {
-            code: 200,
             tokens
           };
       }

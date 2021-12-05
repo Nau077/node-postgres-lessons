@@ -1,16 +1,16 @@
 const knex = require("../../config/knex.config");
 const STUDENTS_TABLE = "students";
+const { DataBaseError, errors } = require("../utils/error.util");
 
 module.exports = class StudentRepository {
 
-  async addStudent() {
-
+  async addStudent(fields) {
     try {
       const result = await knex(STUDENTS_TABLE)
         .insert(fields)
         .returning("*");
 
-      return result;
+      return result[0];
     } catch (error) {
       throw new DataBaseError(errors.get("DATA_BASE_ERROR"));
     }
@@ -25,14 +25,18 @@ module.exports = class StudentRepository {
     }
   }
 
-  async getOneStudent(phoneNumber) {
+  async getOneStudent(phone_number) {
     try {
       const student = await knex
-        .select("id", "name", "phone_number")
+        .select("id", "name", "phone_number", "password")
         .from("students")
-        .where({ phone_number: phoneNumber });
+        .where({ phone_number });
+    
+      if (!student[0]) {
+          return null
+      }
 
-      return student;
+      return student[0];
     } catch (e) {
       throw e;
     }

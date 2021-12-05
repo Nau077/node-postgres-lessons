@@ -1,18 +1,32 @@
-const StudentsUseCase = require("../../domain-layer/use-cases/students.use-case");
+const StudentsUseCase = require("../../domain-layer/use-cases/students/students.use-case");
 
-exports.getStudents = async (req, res) => {
+exports.addStudent = async (req, res) => {
+    try {
+        const studentsUseCase = new StudentsUseCase();
+        const data = req.body;
+    
+        if (data) {
+          const teacher = await studentsUseCase.addOne(data);
+    
+          return res.status(200).send(teacher);
+        }
+      } catch (error) {
+        return res.status(400).send(error);
+      }    
+}
+
+exports.getStudent = async (req, res) => {
   try {
     const studentsUseCase = new StudentsUseCase();
 
     if (req?.query?.id) {
-      console.log(req.query);
       const id = req.query.id;
 
-      const student = await studentsUseCase.getOneStudent(id);
+      const student = await studentsUseCase.getOne(id);
       return res.status(200).send(student);
     }
 
-    const students = await studentsUseCase.getStudents();
+    const students = await studentsUseCase.getAll();
 
     return res.status(200).send(students);
   } catch (error) {
@@ -27,7 +41,7 @@ exports.updateStudent = async (req, res) => {
     const data = req.body;
 
     if (data?.phone_number) {
-      const student = await studentsUseCase.updateStudent(
+      const student = await studentsUseCase.updateOne(
         data.phone_number,
         data.id
       );
