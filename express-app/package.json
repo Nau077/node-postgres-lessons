@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "lint": "eslint --fix . --ext .js --fix ",
-    "dev": "nodemon ./src/server.js",
-    "migrate": "node-pg-migrate"
+    "dev": "nodemon ./src/server.js"
   },
   "author": "r.tolokontsev",
   "license": "ISC",
@@ -38,8 +37,9 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.11",
-    "node-pg-migrate": "^6.0.0",
+    "node-pg-migrate": "^6.2.0",
     "nodemon": "^2.0.13",
-    "pg": "^8.7.1"
+    "pg": "^8.7.1",
+    "uuid": "^8.3.2"
   }
 }

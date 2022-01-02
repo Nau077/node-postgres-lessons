@@ -1,9 +1,9 @@
-const StudentsUseCase = require("../students/students.use-case");
+const StudentsUseCase = require("../students.use-case");
 
-const authStrategy =  {
-    "students": StudentsUseCase
-}
+const authStrategy = {
+  students: StudentsUseCase,
+};
 
 module.exports = {
-    authStrategy
-}
+  authStrategy,
+};

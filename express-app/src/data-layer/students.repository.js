@@ -3,12 +3,13 @@ const STUDENTS_TABLE = "students";
 const { DataBaseError, errors } = require("../utils/error.util");
 
 module.exports = class StudentRepository {
-
   async addStudent(fields) {
     try {
-      const result = await knex(STUDENTS_TABLE)
-        .insert(fields)
-        .returning("*");
+      const result = await knex(STUDENTS_TABLE).insert(fields).returning("*");
+
+      if (!result[0]) {
+        return null;
+      }
 
       return result[0];
     } catch (error) {
@@ -31,9 +32,9 @@ module.exports = class StudentRepository {
         .select("id", "name", "phone_number", "password")
         .from("students")
         .where({ phone_number });
-    
+
       if (!student[0]) {
-          return null
+        return null;
       }
 
       return student[0];

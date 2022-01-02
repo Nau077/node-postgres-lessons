@@ -19,7 +19,7 @@ exports.getLessons = async (req, res) => {
       return res.status(200).send(lessons);
     }
   } catch (error) {
-      return res.status(400).send(error);
+    return res.status(400).send(error);
   }
 };
 
@@ -33,7 +33,6 @@ exports.addLesson = async (req, res) => {
       return res.status(200).send(student);
     }
   } catch (error) {
- 
-      return res.status(400).send(error);
+    return res.status(400).send(error);
   }
 };

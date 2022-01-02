@@ -2,9 +2,10 @@
 
 exports.shorthands = undefined;
 
-exports.up = pgm => { 
- pgm.addColumns("students", {
+exports.up = (pgm) => {
+  pgm.addColumns("students", {
     password: { type: "text" },
-  });};
+  });
+};
 
-exports.down = pgm => {};
+exports.down = (pgm) => {};

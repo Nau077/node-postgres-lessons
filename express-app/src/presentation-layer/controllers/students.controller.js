@@ -1,19 +1,19 @@
-const StudentsUseCase = require("../../domain-layer/use-cases/students/students.use-case");
+const StudentsUseCase = require("../../domain-layer/use-cases/students.use-case");
 
 exports.addStudent = async (req, res) => {
-    try {
-        const studentsUseCase = new StudentsUseCase();
-        const data = req.body;
-    
-        if (data) {
-          const teacher = await studentsUseCase.addOne(data);
-    
-          return res.status(200).send(teacher);
-        }
-      } catch (error) {
-        return res.status(400).send(error);
-      }    
-}
+  try {
+    const studentsUseCase = new StudentsUseCase();
+    const data = req.body;
+
+    if (data) {
+      const teacher = await studentsUseCase.addOne(data);
+
+      return res.status(200).send(teacher);
+    }
+  } catch (e) {
+    return res.send(e);
+  }
+};
 
 exports.getStudent = async (req, res) => {
   try {
@@ -29,9 +29,8 @@ exports.getStudent = async (req, res) => {
     const students = await studentsUseCase.getAll();
 
     return res.status(200).send(students);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send({ message: err.message });
+  } catch (e) {
+    return res.send(e);
   }
 };
 
@@ -47,8 +46,7 @@ exports.updateStudent = async (req, res) => {
       );
       return res.status(200).send(student);
     }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send({ message: err.message });
+  } catch (e) {
+    return res.send(e);
   }
 };

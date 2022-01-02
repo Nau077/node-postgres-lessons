@@ -4,17 +4,16 @@ const HandlerUseCase = require("./common/handler.use-case");
 const { PropertyRequiredError, errors } = require("../../utils/error.util");
 
 module.exports = class TeacherUseCase extends HandlerUseCase {
-
   constructor() {
-      const mapFields = {
-        id: "id",
-        name: "name",
-        work_experience: "work_experience",
-        phone_number: "phone_number",
-        subject_id: "subject_id",
-        is_union_member: "is_union_member",
-      };
-      super(mapFields);
+    const mapFields = {
+      id: "id",
+      name: "name",
+      work_experience: "work_experience",
+      phone_number: "phone_number",
+      subject_id: "subject_id",
+      is_union_member: "is_union_member",
+    };
+    super(mapFields);
   }
 
   async getTeachers() {

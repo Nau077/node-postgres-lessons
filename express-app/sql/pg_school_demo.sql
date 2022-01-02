@@ -116,12 +116,34 @@ $$
                 id           SERIAL PRIMARY KEY,
                 name         VARCHAR(50) NOT NULL,
                 phone_number TEXT,
-                created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+                created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                password     VARCHAR(150) NOT NULL
             ); 
         END IF;
     END
 $$;
 
+-- CREATE "tokens"
+DO
+$$
+    BEGIN
+        IF NOT EXISTS
+            (SELECT 1
+             FROM information_schema.tables
+             WHERE table_schema = 'public'
+               AND table_name = 'tokens'
+            )
+        THEN
+            CREATE TABLE tokens
+            (
+                id       SERIAL PRIMARY KEY,
+                user_id   INTEGER NOT NULL,
+                role     VARCHAR(100) NOT NULL,
+                token    VARCHAR(300) NOT NULL
+            );
+        END IF;
+    END
+$$;
 
 
 -- CREATE "subjectsstudents"
@@ -244,10 +266,10 @@ $$
              WHERE id = 1
             )
         THEN
-            INSERT INTO public.students (id, name, phone_number)
-            VALUES (1, 'Kristina', '87516562229'),
-                   (2, 'Michael', '87516562227'),
-                   (3, 'R2D2', '87516562226');
+            INSERT INTO public.students (id, name, phone_number, password)
+            VALUES (1, 'Kristina', '87516562229', '*'),
+                   (2, 'Michael', '87516562227', '*'),
+                   (3, 'R2D2', '87516562226', '*');
         END IF;
     END
 $$;
