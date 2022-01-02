@@ -1,6 +1,4 @@
 const studentsRoutesInit = require("./students.routes");
-const teachersRoutesInit = require("./teachers.routes");
-const lessonsRoutesInit = require("./lessons.routes");
 const authRouteInit = require("./auth.routes");
 
 const routeInit = (app, express) => {
@@ -15,8 +13,6 @@ const routeInit = (app, express) => {
   });
 
   studentsRoutesInit(app);
-  teachersRoutesInit(app);
-  lessonsRoutesInit(app);
   authRouteInit(app);
 };
 module.exports = {
